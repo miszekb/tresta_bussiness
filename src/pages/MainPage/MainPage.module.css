@@ -1,0 +1,105 @@
+.dashboardContainer {
+    padding: 30px;
+    font-family: 'Nova Flat';
+}
+
+.upperBar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.appTitle {
+    font-size: 13px;
+    width: 79px;
+    height: 32px;
+}
+
+.profileAvatar {
+    background-color: red;
+    color: white;
+    width: 48px;
+    font-size: 30px;
+    text-align: center;
+    line-height: 48px;
+    height: 48px;
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 50%;
+}
+
+.profileMiniAvatar {
+    background-color: red;
+    color: white;
+    width: 30px;
+    font-size: 20px;
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 50%;
+}
+
+.greetingText {
+    font-size: 24px;
+    margin-top: 25px;
+}
+
+.balanceTitle {
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.balanceValue {
+    margin-top: 7px;
+    font-size: 64px;
+}
+
+.transactionButtonContainer {
+    margin-top: 40px;
+}
+
+.transactionButton {
+    width: 100%;
+    height: 60px;
+    font-size: 16px;
+    -webkit-box-shadow: 0px 3px 11px -3px rgba(161, 161, 161, 1);
+    -moz-box-shadow: 0px 3px 11px -3px rgba(161, 161, 161, 1);
+    box-shadow: 0px 3px 11px -3px rgba(161, 161, 161, 1);
+}
+
+.transactionHistoryContainer {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.transactionHistoryTitle {
+    font-size: 14px;
+    padding-bottom: 7px;
+    border-bottom: 2px solid black;
+}
+
+.transactionEntry {
+    display: flex;
+    justify-content: space-around;
+    height: 40px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.151);
+    width: 100%;
+}
+
+.transactionSidesContainer {
+    margin-top: 4px;
+    width: 100px;
+    display: flex;
+}
+
+.transactionTitle {
+    font-size: 16px;
+    line-height: 250%;
+}
+
+.transactionValue {
+    font-size: 24px;
+    line-height: 150%;
+    font-weight: bold;
+    float: right;
+}

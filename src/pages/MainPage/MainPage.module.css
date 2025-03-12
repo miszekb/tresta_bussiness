@@ -26,18 +26,6 @@
     border-radius: 50%;
 }
 
-.profileMiniAvatar {
-    background-color: red;
-    color: white;
-    width: 30px;
-    font-size: 20px;
-    text-align: center;
-    line-height: 30px;
-    height: 30px;
-    border: 1px solid rgb(209, 209, 209);
-    border-radius: 50%;
-}
-
 .greetingText {
     font-size: 24px;
     margin-top: 25px;
@@ -66,6 +54,21 @@
     box-shadow: 0px 3px 11px -3px rgba(161, 161, 161, 1);
 }
 
+.transactionButtonIcon {
+    margin: 13px 20px;
+    float: left;
+}
+
+.transactionButtonName {
+    padding-top: 20px;
+}
+
+.transactionButtonArrow {
+    float: right;
+    margin-top: -20px;
+    margin-right: 20px;
+}
+
 .transactionHistoryContainer {
     margin-top: 40px;
     width: 100%;
@@ -77,29 +80,3 @@
     border-bottom: 2px solid black;
 }
 
-.transactionEntry {
-    display: flex;
-    justify-content: space-around;
-    height: 40px;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.151);
-    width: 100%;
-}
-
-.transactionSidesContainer {
-    margin-top: 4px;
-    width: 100px;
-    display: flex;
-}
-
-.transactionTitle {
-    font-size: 16px;
-    line-height: 250%;
-}
-
-.transactionValue {
-    font-size: 24px;
-    line-height: 150%;
-    font-weight: bold;
-    float: right;
-}

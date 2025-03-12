@@ -1,4 +1,7 @@
 import styles from './MainPage.module.css';
+import { ReactComponent as TransactionButton } from '../../assets/transaction_button.svg';
+import { ReactComponent as ArrowRight } from '../../assets/arrow_right.svg';
+import { TransactionHistoryEntry } from '../../components/TransactionHistoryEntry/TransactionHistoryEntry';
 
 export const MainPage = () => {
     return <div className={styles.dashboardContainer}>
@@ -13,21 +16,26 @@ export const MainPage = () => {
         </div>
         <div className={styles.transactionButtonContainer}>
             <div className={styles.transactionButton}>
-                PRZELEW {'>'}
+                <div className={styles.transactionButtonIcon}><TransactionButton/></div>
+                <div className={styles.transactionButtonName}>PRZELEW</div>
+                <div className={styles.transactionButtonArrow}><ArrowRight/></div>
             </div>
         </div>
         <div className={styles.transactionHistoryContainer}>
             <div className={styles.transactionHistoryTitle}>HISTORIA TRANSAKCJI</div>
             <div className={styles.transactionList}>
-                <div className={styles.transactionEntry}>
-                    <div className={styles.transactionSidesContainer}>
-                        <div className={styles.profileMiniAvatar}>D</div>
-                        <div className={styles.transactionArrow}>-{'>'}</div>
-                        <div className={styles.profileMiniAvatar}>B</div>
-                    </div>
-                    <div className={styles.transactionTitle}>RATA KREDYTU</div>
-                    <div className={styles.transactionValue}>400F</div>
-                </div>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
+                <TransactionHistoryEntry/>
             </div>
         </div>
     </div>

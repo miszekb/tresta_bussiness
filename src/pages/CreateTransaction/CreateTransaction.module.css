@@ -3,6 +3,11 @@
     padding: 30px;
 }
 
+.upperBar a {
+    text-decoration: none;
+    color: black;
+}
+
 .backButton {
     font-size: 24px;
 }
@@ -17,6 +22,8 @@
     display: flex;
     overflow-x: scroll;
     margin-top: 10px;
+    gap: 10px;
+    padding: 5px;
 }
 
 .receiverOption {
@@ -27,6 +34,18 @@
     line-height: 48px;
     height: 48px;
     border: 1px solid rgb(209, 209, 209);
+    border-radius: 50%;
+}
+
+.receiverOptionSelected {
+    color: white;
+    width: 48px;
+    font-size: 30px;
+    text-align: center;
+    line-height: 48px;
+    height: 48px;
+    border: 1px solid rgb(209, 209, 209);
+    box-shadow: 0px 0px 8px 0px rgba(71, 159, 236, 1);
     border-radius: 50%;
 }
 

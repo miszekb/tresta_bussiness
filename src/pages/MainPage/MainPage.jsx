@@ -1,14 +1,39 @@
 import styles from './MainPage.module.css';
 import { ReactComponent as TransactionButton } from '../../assets/transaction_button.svg';
 import { ReactComponent as ArrowRight } from '../../assets/arrow_right.svg';
+import { ReactComponent as Refresh } from '../../assets/refresh.svg';
+
 import { TransactionHistoryEntry } from '../../components/TransactionHistoryEntry/TransactionHistoryEntry';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { colors } from '../../colors';
 import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore/lite';
+import { createUser } from '../../store/actions/currentUser';
 
 export const MainPage = () => {
+    const [ transactionHistory, setTransactionHistory ] = useState([]);
+    const [ playersList, setPlayersList ] = useState([]);
+
     const { currentUser } = useSelector(state => state.currentUser);
+    const { firebaseDB } = useSelector(state => state.firebaseDB);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        (async () => {
+            await onRefresh();
+        })();
+    }, []);
+
+    const onRefresh = async () => {
+        const snapshotTransactions = await getDocs(collection(firebaseDB, "transactions"));
+        setTransactionHistory(snapshotTransactions.docs.map(doc => doc.data()));
+        const snapshotPlayers = await getDocs(collection(firebaseDB, "players"));
+        setPlayersList(snapshotPlayers.docs.map(doc => doc.data()));
+        // load player info
+        dispatch(createUser(snapshotPlayers.docs.map(doc => doc.data()).find(player => player.playerID === currentUser.playerID)))
+    }
 
     const onTransactionClick = () => {
         navigate('/transaction');
@@ -22,7 +47,7 @@ export const MainPage = () => {
         <div className={styles.accountBalanceContainer}>
             <div className={styles.greetingText}>Hej, {currentUser.name}!</div>
             <div className={styles.balanceTitle}>STAN KONTA</div>
-            <div className={styles.balanceValue}>{currentUser.funds}F</div>
+            <div className={styles.balanceValue}>{currentUser.funds}F <Refresh onClick={onRefresh} width={30} height={30}/></div>
         </div>
         <div className={styles.transactionButtonContainer}>
             <div className={styles.transactionButton}>
@@ -34,18 +59,9 @@ export const MainPage = () => {
         <div className={styles.transactionHistoryContainer}>
             <div className={styles.transactionHistoryTitle}>HISTORIA TRANSAKCJI</div>
             <div className={styles.transactionList}>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
-                <TransactionHistoryEntry/>
+                { transactionHistory.map(transaction => {
+                    console.log(transaction)
+                    return <TransactionHistoryEntry transactionInfo={transaction} allPlayers={playersList}/>})}
             </div>
         </div>
     </div>

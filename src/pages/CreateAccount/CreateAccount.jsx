@@ -56,6 +56,7 @@ export const CreateAccount = () => {
                 funds: 3000
             }
             await setDoc(ref, userInfo);
+            //TODO: update funds in database
             dispatch(createUser(userInfo));
             //TODO: set current player in the store
             navigate('/main');

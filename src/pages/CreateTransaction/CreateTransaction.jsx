@@ -1,16 +1,26 @@
 import styles from './CreateTransaction.module.css';
 import { ReactComponent as FamilyCoin } from '../../assets/familycoin.svg';
+import { ReactComponent as BackIcon } from '../../assets/back.svg';
+
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { useDispatch, useSelector } from 'react-redux';
+import { collection, doc, getDocs, setDoc, getDoc } from 'firebase/firestore/lite';
 import { colors } from '../../colors';
+import { v4 as uuidv4 } from 'uuid';
+import { createPortal } from 'react-dom';
+import { Link } from 'react-router';
+import { createUser } from '../../store/actions/currentUser';
 
 export const CreateTransaction = () => {
+    const [ transactionReceiver, setTransactionReceiver] = useState(null);
     const [ transactionValue, setTransactionValue ] = useState('')
     const [ transactionTitle, setTransactionTitle] = useState(null);
+    const [ transactionResult, setTransactionResult] = useState(null);
+
     const { firebaseDB } = useSelector(state => state.firebaseDB);
     const [ availableReceivers, setAvailableReceivers ] = useState([]);
     const { currentUser } = useSelector(state => state.currentUser);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         // TODO: get all players
@@ -22,12 +32,56 @@ export const CreateTransaction = () => {
         // return snapshot.docs.some(doc => doc.data().isBank === true);
     }, [])
 
+    const onTransactionResultModalClose = () => {
+        setTransactionResult(null);
+    }
+
+    const onReceiverSelect = (event) => {
+        setTransactionReceiver(event.target.id);
+    }
+
     const onValueChange = (event) => {
-        setTransactionValue(event.target.value)
+        setTransactionValue(+event.target.value)
     }
 
     const onTransactionTitleSelect = (option) => {
         setTransactionTitle(option.target.innerText);
+    }
+
+    const onSubmitTransaction = async () => {
+        // Call base
+        if (currentUser.funds > +transactionValue) {
+            const transactionId = uuidv4();
+            const ref = doc(firebaseDB, "transactions", transactionId);
+            console.log(ref)
+            const transactionInfo = {
+                receiverId: transactionReceiver,
+                senderId: currentUser.playerID,
+                title: transactionTitle,
+                value: transactionValue
+            }
+            await setDoc(ref, transactionInfo);
+            const receiverData = availableReceivers.find(receiver => receiver.playerID === transactionReceiver);
+            const receiverRef = doc(firebaseDB, "players", transactionReceiver);
+            await setDoc(receiverRef, {...receiverData, funds: +receiverData.funds + transactionValue});
+            const senderRef = doc(firebaseDB, "players", currentUser.playerID);
+            dispatch(createUser({...currentUser, funds: +currentUser.funds - transactionValue}))
+            await setDoc(senderRef, {...currentUser, funds: +currentUser.funds - transactionValue});
+            setTransactionResult(true);
+        } else {
+            setTransactionResult(false);
+        }
+            
+            // dispatch(createUser(transactionInfo));
+            //TODO: display transaction moda
+    }
+
+    const getTransactionReceiverClass = (id) => {
+        if (id === transactionReceiver) {
+            return styles.receiverOptionSelected;
+        } else {
+            return styles.receiverOption;
+        }
     }
 
     const getTransactionTitleOptionClass = (option) => {
@@ -46,15 +100,21 @@ export const CreateTransaction = () => {
         }
     }
 
-    return <div className={styles.transactionViewContainer}>
+    return <>
+    <div className={styles.transactionViewContainer}>
         <div className={styles.upperBar}>
-            <div className={styles.backButton}> {'<-'} Przelew </div>
+            <Link to={'/main'}><div className={styles.backButton}><BackIcon/> Przelew </div></Link>
         </div>
         <div className={styles.receiversListContainer}>
             <div className={styles.smallTitle}>ODBIORCA</div>
             <div className={styles.receiversList}>
                 { availableReceivers.map(receiver =>
-                    <div className={styles.receiverOption} style={{background: colors[receiver.color]}}>{receiver.name[0].toUpperCase()}</div>)
+                    <div
+                        className={getTransactionReceiverClass(receiver.playerID)}
+                        style={{background: colors[receiver.color]}}
+                        onClick={onReceiverSelect}
+                        id={receiver.playerID}
+                    >{receiver.name[0].toUpperCase()}</div>)
                 }
                 
             </div>
@@ -80,6 +140,10 @@ export const CreateTransaction = () => {
                 <div className={getTransactionTitleOptionClass('INNY')} onClick={onTransactionTitleSelect}>INNY</div>
             </div>
         </div>
-        <div className={getButtonClass()}>WYŚLIJ</div>
+        <div className={getButtonClass()} onClick={onSubmitTransaction}>WYŚLIJ</div>
     </div>
+    {/* {transactionResult && createPortal(<BankErrorModal onModalClose={onTransactionResultModalClose}/>, document.getElementById('modal'))}
+    {transactionResult === false ? createPortal(<BankErrorModal onModalClose={onTransactionResultModalClose}/>, document.getElementById('modal')) : null} */}
+
+    </>
 }

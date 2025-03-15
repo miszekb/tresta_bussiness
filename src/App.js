@@ -7,7 +7,8 @@ import { useEffect } from 'react';
 import firebaseConfig from './firebase.config';
 import { getFirestore } from 'firebase/firestore/lite';
 import { setFirebaseDB } from './store/actions/firebaseDB';
-
+import { Routes, Route, BrowserRouter } from "react-router";
+import { CreateTransaction } from './pages/CreateTransaction/CreateTransaction';
 
 function App() {
   const dispatch = useDispatch();
@@ -21,8 +22,13 @@ function App() {
 
   return (
       <div className="App">
-        <CreateAccount/>
-        {/* <MainPage/> */}
+          <BrowserRouter>
+            <Routes>
+              <Route index element={<CreateAccount />}/>
+              <Route path="main" element={<MainPage />}/>
+              <Route path="transaction" element={<CreateTransaction />}/>
+            </Routes>
+          </BrowserRouter>
       </div>
   );
 }

@@ -1,0 +1,112 @@
+.transactionViewContainer {
+    font-family: 'Nova Flat';
+    padding: 30px;
+}
+
+.backButton {
+    font-size: 24px;
+}
+
+.receiversListContainer,
+.transactionValueContainer,
+.transactionTitleContainer {
+    margin-top: 30px
+}
+
+.receiversList {
+    display: flex;
+    overflow-x: scroll;
+    margin-top: 10px;
+}
+
+.receiverOption {
+    color: white;
+    width: 48px;
+    font-size: 30px;
+    text-align: center;
+    line-height: 48px;
+    height: 48px;
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 50%;
+}
+
+.smallTitle {
+    font-size: 14px;
+}
+
+.inputContainer {
+    display: flex;
+}
+
+.inputContainer svg {
+    margin-left: -35px;
+    margin-top: 30px;
+}
+
+.transactionValueInput {
+    margin-top: 15px;
+    width: 90%;
+    font-size: 32px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 10px;
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.transactionTitlesList {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 90%;
+}
+
+.transactionTitleOption,
+.transactionTitleOptionSelected {
+    border-radius: 50px;
+    padding: 8px 14px;
+    font-size: 16px;
+    text-align: center;
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    margin: 3px;
+}
+
+.transactionTitleOptionSelected {
+    border: 2px solid rgba(71, 159, 236, 1);
+    background: rgba(71, 159, 236, 0.15);
+}
+
+.sendButton {
+    cursor: pointer;
+    margin: auto;
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(71, 159, 236, 1);
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    width: 90%;
+}
+
+.sendButtonBlocked {
+    margin: auto;
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(71, 159, 236, 0.3);
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    width: 90%;
+    pointer-events: none;
+}

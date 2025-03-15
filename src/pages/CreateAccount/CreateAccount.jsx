@@ -2,18 +2,12 @@ import { useState } from 'react';
 import styles from './CreateAccount.module.css';
 import { createPortal } from 'react-dom';
 import { BankErrorModal } from '../../components/BankErrorModal/BankErrorModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { doc, setDoc, collection, getDocs  } from "firebase/firestore/lite"; 
 import { v4 as uuidv4 } from 'uuid';
-
-const colors = {
-    1: 'rgb(255, 209, 59)',
-    2: 'rgb(236, 71, 71)',
-    3: 'rgb(71, 159, 236)',
-    4: 'rgba(20, 155, 47, 1)',
-    5: 'rgba(74, 43, 117, 1)',
-    6: 'rgba(255, 255, 255, 1)'
-}  
+import { useNavigate } from "react-router";
+import { createUser } from '../../store/actions/currentUser';
+import { colors } from '../../colors';
 
 export const CreateAccount = () => {
     const [ selectedColor, setSelectedColor ] = useState(null);
@@ -21,6 +15,8 @@ export const CreateAccount = () => {
     const [ isBankSelected, setIsBankSelected ] = useState(false);
     const [ isBankModalOpened, setIsBankModalOpened ] = useState(false);
     const { firebaseDB } = useSelector(state => state.firebaseDB);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const onUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -39,9 +35,8 @@ export const CreateAccount = () => {
         return snapshot.docs.some(doc => doc.data().isBank === true);
     }
 
+    // TODO: check if color is taken
     const checkIfColorIsTaken = async () => {        
-        const snapshot = await getDocs(collection(firebaseDB, "players"));
-        return snapshot.docs.some(doc => doc.data().isBank === true);
     }
 
     const onCreateProfile = async () => {
@@ -53,17 +48,18 @@ export const CreateAccount = () => {
             const playerID = uuidv4();
             const ref = doc(firebaseDB, "players", playerID);
             console.log(ref)
-            await setDoc(ref, {
+            const userInfo = {
                 color: selectedColor,
                 name: username,
                 playerID,
                 isBank: isBankSelected,
                 funds: 3000
-            });
+            }
+            await setDoc(ref, userInfo);
+            dispatch(createUser(userInfo));
+            //TODO: set current player in the store
+            navigate('/main');
         }
-
-        // TODO: if user created - proceed to game main view
-
     }
 
     const getColorSelectionClass = (colorId) => {

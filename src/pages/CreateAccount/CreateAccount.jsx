@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './CreateAccount.module.css';
 import { createPortal } from 'react-dom';
 import { BankErrorModal } from '../../components/BankErrorModal/BankErrorModal';
@@ -17,6 +17,22 @@ export const CreateAccount = () => {
     const { firebaseDB } = useSelector(state => state.firebaseDB);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        (async () => {
+            console.log('FIREBASE', firebaseDB)
+            if (document.cookie.includes('trestaPlayerId') && firebaseDB) {
+                const userIdFromCookie = document.cookie.split("trestaPlayerId=")[1].split(";")[0];
+                console.log(userIdFromCookie)
+                const snapshotPlayers = await getDocs(collection(firebaseDB, "players"));
+                console.log(snapshotPlayers)
+                const loggedPlayer = snapshotPlayers.docs.map(doc => doc.data()).find(player => player.playerID === userIdFromCookie)
+                dispatch(createUser(loggedPlayer))
+
+                navigate('/main');
+            }    
+        })();
+    }, [firebaseDB]);
 
     const onUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -58,6 +74,9 @@ export const CreateAccount = () => {
             await setDoc(ref, userInfo);
             //TODO: update funds in database
             dispatch(createUser(userInfo));
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.cookie = `trestaPlayerId=${playerID}; expires=${tomorrow.toUTCString()}`;
             //TODO: set current player in the store
             navigate('/main');
         }

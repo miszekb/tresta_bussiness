@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import { createUser } from '../../store/actions/currentUser';
+import { SuccessModal } from '../../components/SuccessModal/SuccessModal';
+import { ErrorModal } from '../../components/ErrorModal/ErrorModal';
 
 export const CreateTransaction = () => {
     const [ transactionReceiver, setTransactionReceiver] = useState(null);
@@ -23,12 +25,25 @@ export const CreateTransaction = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        (async () => {
+            console.log('FIREBASE', firebaseDB)
+            if (document.cookie.includes('trestaPlayerId') && firebaseDB) {
+                const userIdFromCookie = document.cookie.split("trestaPlayerId=")[1].split(";")[0];
+                console.log(userIdFromCookie)
+                const snapshotPlayers = await getDocs(collection(firebaseDB, "players"));
+                console.log(snapshotPlayers)
+                const loggedPlayer = snapshotPlayers.docs.map(doc => doc.data()).find(player => player.playerID === userIdFromCookie)
+                dispatch(createUser(loggedPlayer))
+            }    
+        })();
+    }, [firebaseDB]);
+
+    useEffect(() => {
         // TODO: get all players
         (async () => {
             const snapshot = await getDocs(collection(firebaseDB, "players"));
             setAvailableReceivers(snapshot.docs.map(doc => doc.data()).filter(player => player.playerID !== currentUser.playerID));
         })()
-
         // return snapshot.docs.some(doc => doc.data().isBank === true);
     }, [])
 
@@ -142,8 +157,8 @@ export const CreateTransaction = () => {
         </div>
         <div className={getButtonClass()} onClick={onSubmitTransaction}>WYŚLIJ</div>
     </div>
-    {/* {transactionResult && createPortal(<BankErrorModal onModalClose={onTransactionResultModalClose}/>, document.getElementById('modal'))}
-    {transactionResult === false ? createPortal(<BankErrorModal onModalClose={onTransactionResultModalClose}/>, document.getElementById('modal')) : null} */}
+    {transactionResult && createPortal(<SuccessModal onModalClose={onTransactionResultModalClose}/>, document.getElementById('modal'))}
+    {transactionResult === false ? createPortal(<ErrorModal onModalClose={onTransactionResultModalClose}/>, document.getElementById('modal')) : null}
 
     </>
 }

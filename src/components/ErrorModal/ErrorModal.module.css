@@ -1,0 +1,42 @@
+.overlay {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.671);
+    font-family: 'Nova Flat';
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.errorIcon {
+    margin: auto;
+}
+
+.modalContainer {
+    margin: auto;
+    width: 80%;
+    height: 70%;
+    background-color: white;
+    padding: 30px 15px 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modalText {
+    font-size: 24px;
+    text-align: center;
+    padding: 0 10px;
+}
+
+.continueButton {
+    height: 60px;
+    width: 90%;
+    background-color: rgba(71, 159, 236, 1);
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    margin-top: 20px;
+    text-align: center;
+    line-height: 60px;
+    margin: auto;
+}

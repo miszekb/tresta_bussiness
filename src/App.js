@@ -12,12 +12,12 @@ import { CreateTransaction } from './pages/CreateTransaction/CreateTransaction';
 
 function App() {
   const dispatch = useDispatch();
-
   useEffect(() => {
     // initiate DB connection
     const app = initializeApp(firebaseConfig);
     const firebaseDB = getFirestore(app);
     dispatch(setFirebaseDB(firebaseDB));
+    console.log('DB LOADED')
   }, [])
 
   return (

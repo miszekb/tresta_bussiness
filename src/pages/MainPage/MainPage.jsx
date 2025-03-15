@@ -22,17 +22,29 @@ export const MainPage = () => {
 
     useEffect(() => {
         (async () => {
+            console.log('FIREBASE', firebaseDB)
+            if (document.cookie.includes('trestaPlayerId') && firebaseDB) {
+                const userIdFromCookie = document.cookie.split("trestaPlayerId=")[1].split(";")[0];
+                console.log(userIdFromCookie)
+                const snapshotPlayers = await getDocs(collection(firebaseDB, "players"));
+                console.log(snapshotPlayers)
+                const loggedPlayer = snapshotPlayers.docs.map(doc => doc.data()).find(player => player.playerID === userIdFromCookie)
+                dispatch(createUser(loggedPlayer))
+            }
+    
             await onRefresh();
         })();
-    }, []);
+    }, [firebaseDB]);
 
     const onRefresh = async () => {
-        const snapshotTransactions = await getDocs(collection(firebaseDB, "transactions"));
-        setTransactionHistory(snapshotTransactions.docs.map(doc => doc.data()));
-        const snapshotPlayers = await getDocs(collection(firebaseDB, "players"));
-        setPlayersList(snapshotPlayers.docs.map(doc => doc.data()));
-        // load player info
-        dispatch(createUser(snapshotPlayers.docs.map(doc => doc.data()).find(player => player.playerID === currentUser.playerID)))
+        if (currentUser) {
+            const snapshotTransactions = await getDocs(collection(firebaseDB, "transactions"));
+            setTransactionHistory(snapshotTransactions.docs.map(doc => doc.data()));
+            const snapshotPlayers = await getDocs(collection(firebaseDB, "players"));
+            setPlayersList(snapshotPlayers.docs.map(doc => doc.data()));
+            // load player info
+            dispatch(createUser(snapshotPlayers.docs.map(doc => doc.data()).find(player => player.playerID === currentUser.playerID)))
+        }
     }
 
     const onTransactionClick = () => {
@@ -42,12 +54,12 @@ export const MainPage = () => {
     return <div className={styles.dashboardContainer}>
         <div className={styles.upperBar}>
             <div className={styles.appTitle}>TRESTA BUSINESS</div>
-            <div className={styles.profileAvatar} style={{background: colors[currentUser.color]}}>{currentUser.name[0].toUpperCase()}</div>
+            <div className={styles.profileAvatar} style={{background: colors[currentUser?.color]}}>{currentUser?.name[0].toUpperCase()}</div>
         </div>
         <div className={styles.accountBalanceContainer}>
-            <div className={styles.greetingText}>Hej, {currentUser.name}!</div>
+            <div className={styles.greetingText}>Hej, {currentUser?.name}!</div>
             <div className={styles.balanceTitle}>STAN KONTA</div>
-            <div className={styles.balanceValue}>{currentUser.funds}F <Refresh onClick={onRefresh} width={30} height={30}/></div>
+            <div className={styles.balanceValue}>{currentUser?.funds}F <Refresh onClick={onRefresh} width={30} height={30}/></div>
         </div>
         <div className={styles.transactionButtonContainer}>
             <div className={styles.transactionButton}>

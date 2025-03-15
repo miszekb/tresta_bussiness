@@ -32,6 +32,7 @@
     height: 60px;
     width: 90%;
     background-color: rgba(71, 159, 236, 1);
+    cursor: pointer;
     color: white;
     font-size: 16px;
     margin-top: 20px;

@@ -22,8 +22,8 @@ export const MainPage = () => {
 
     useEffect(() => {
         (async () => {
-            console.log('FIREBASE', firebaseDB)
-            if (document.cookie.includes('trestaPlayerId') && firebaseDB) {
+            console.log('FIREBASE', firebaseDB, currentUser)
+            if (document.cookie.includes('trestaPlayerId') && firebaseDB && !currentUser) {
                 const userIdFromCookie = document.cookie.split("trestaPlayerId=")[1].split(";")[0];
                 console.log(userIdFromCookie)
                 const snapshotPlayers = await getDocs(collection(firebaseDB, "players"));
@@ -37,6 +37,7 @@ export const MainPage = () => {
     }, [firebaseDB]);
 
     const onRefresh = async () => {
+        console.log('ON REFRESH')
         if (currentUser) {
             const snapshotTransactions = await getDocs(collection(firebaseDB, "transactions"));
             setTransactionHistory(snapshotTransactions.docs.map(doc => doc.data()));

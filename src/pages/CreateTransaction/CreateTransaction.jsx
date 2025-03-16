@@ -27,7 +27,7 @@ export const CreateTransaction = () => {
     useEffect(() => {
         (async () => {
             console.log('FIREBASE', firebaseDB)
-            if (document.cookie.includes('trestaPlayerId') && firebaseDB) {
+            if (document.cookie.includes('trestaPlayerId') && firebaseDB && !currentUser) {
                 const userIdFromCookie = document.cookie.split("trestaPlayerId=")[1].split(";")[0];
                 console.log(userIdFromCookie)
                 const snapshotPlayers = await getDocs(collection(firebaseDB, "players"));
